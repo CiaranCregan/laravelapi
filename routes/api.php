@@ -27,3 +27,4 @@ Route::get('/bookings', 'BookingsController@getAllBookings');
 
 // user endpoints
 Route::get('/bookings/{id}', 'BookingsController@getBookingsByUserId')->name('allbookings');
+// Route::get('/bookings/{id}', 'BookingsController@getBookingsByUserId')->name('allbookings');
