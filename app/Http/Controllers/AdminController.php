@@ -15,7 +15,7 @@ class AdminController extends Controller
      */
     public function index()
     {
-        $users = User::where('isAdmin', 0)->get();
+        $users = User::select('name')->where('isAdmin', 0)->get();
 
         return $users;
     }

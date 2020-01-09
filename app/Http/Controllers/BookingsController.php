@@ -56,34 +56,29 @@ class BookingsController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function createNewBooking(Request $request)
-    {
+    public function createNewBooking(Request $request){
         $booking = new Bookings;
 
-        $userDetailsById = User::find($request->user_id);
+        $userDetailsById = User::where('name',$request->username) -> first();
 
-        $booking->user_id = $request->user_id;
+        $booking->username = $request->username;
         $booking->date = $request->date;
         $booking->booking_type = $request->booking_type;
         $booking->time = $request->time;
 
         $booking->save();
 
-        $emailData = array(
-            'username' => $userDetailsById->name,
-            'date' => $request->date,
-            'time' => $request->time,
-            'type' => $request->booking_type
-        );
+        // $emailData = array(
+        //     'username' => $userDetailsById->name,
+        //     'date' => $request->date,
+        //     'time' => $request->time,
+        //     'type' => $request->booking_type
+        // );
 
-        Mail::to($userDetailsById->email)->send(new BookingConfirmation($emailData));
+        // Mail::to($userDetailsById->email)->send(new BookingConfirmation($emailData));
 
-        return response()->json([
-            'success' => [
-                $booking,
-                "status" => 200
-            ]
-        ]);
+        return $booking;
+
     }
 
     /**
