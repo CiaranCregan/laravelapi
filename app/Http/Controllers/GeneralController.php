@@ -7,8 +7,8 @@ use Illuminate\Http\Request;
 
 class GeneralController extends Controller
 {
-    public function getMyBookings($id){
-        $userBookings = Bookings::where('user_id', $id)->get();
+    public function getMyBookings($user_id){
+        $userBookings = Bookings::where('user_id', $user_id)->get();
 
         return $userBookings;
     }

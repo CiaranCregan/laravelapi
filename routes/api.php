@@ -26,5 +26,13 @@ Route::get('/todaysbookings', 'BookingsController@getTodaysBookings');
 Route::get('/bookings', 'BookingsController@getAllBookings');
 
 // user endpoints
-Route::get('/bookings/{id}', 'BookingsController@getBookingsByUserId')->name('allbookings');
+Route::get('/booking/{username}', 'BookingsController@getBookingsByUserId')->name('allbookings');
+Route::get('/user/{user_id}', 'GeneralController@getMyBookings');
+Route::get('/qr-code/{id}', function ($id) {
+    $image = QrCode::format('png')
+    ->size(500)
+    ->generate($id);
+
+    return response($image)->header('Content-type','image/png');
+});
 // Route::get('/bookings/{id}', 'BookingsController@getBookingsByUserId')->name('allbookings');

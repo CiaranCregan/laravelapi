@@ -17,7 +17,7 @@ class BookingsController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function getTodaysBookings(){
-        $todaysDate = date('Y-d-m');
+        $todaysDate = date('Y-m-d');
 
         $bookings = Bookings::where('date', $todaysDate)->orderBy('time', 'asc')->get();
 
@@ -38,14 +38,14 @@ class BookingsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function getBookingsByUserId($id)
+    public function getBookingsByUserId($username)
     {
         $todaysDate = date('Y-m-d');
-        $userBookings = Bookings::where('user_id', $id)
-            ->where('date', '>', $todaysDate)
-            ->orderBy('date', 'desc')
-            ->orderBy('time', 'desc')
-            ->get();
+        $userBookings = Bookings::where('username', $username)->get();
+            // ->where('date', '>', $todaysDate)
+            // ->orderBy('date', 'desc')
+            // ->orderBy('time', 'desc')
+            // ->get();
 
         return $userBookings;
     }
@@ -61,6 +61,7 @@ class BookingsController extends Controller
 
         $userDetailsById = User::where('name',$request->username) -> first();
 
+        $booking->user_id = $request->user_id;
         $booking->username = $request->username;
         $booking->date = $request->date;
         $booking->booking_type = $request->booking_type;
