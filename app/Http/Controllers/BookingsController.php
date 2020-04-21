@@ -41,13 +41,12 @@ class BookingsController extends Controller
     public function getBookingsByUserId($username)
     {
         $todaysDate = date('Y-m-d');
-        $userBookings = Bookings::where('username', $username)->get();
-            // ->where('date', '>', $todaysDate)
+        $userBookings = Bookings::where('date', '>', $todaysDate);
             // ->orderBy('date', 'desc')
             // ->orderBy('time', 'desc')
             // ->get();
 
-        return $userBookings;
+        return $todaysDate;
     }
 
     /**
@@ -61,7 +60,7 @@ class BookingsController extends Controller
 
         $userDetailsById = User::where('name',$request->username) -> first();
 
-        $booking->user_id = $request->user_id;
+        $booking->user_id = $userDetailsById->id;
         $booking->username = $request->username;
         $booking->date = $request->date;
         $booking->booking_type = $request->booking_type;
@@ -69,14 +68,14 @@ class BookingsController extends Controller
 
         $booking->save();
 
-        // $emailData = array(
-        //     'username' => $userDetailsById->name,
-        //     'date' => $request->date,
-        //     'time' => $request->time,
-        //     'type' => $request->booking_type
-        // );
+        $emailData = array(
+            'username' => $userDetailsById->name,
+            'date' => $request->date,
+            'time' => $request->time,
+            'type' => $request->booking_type
+        );
 
-        // Mail::to($userDetailsById->email)->send(new BookingConfirmation($emailData));
+        Mail::to($userDetailsById->email)->send(new BookingConfirmation($emailData));
 
         return $booking;
 

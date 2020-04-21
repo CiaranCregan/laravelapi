@@ -8,16 +8,30 @@ use Illuminate\Http\Request;
 
 class AdminController extends Controller
 {
+
+    public function index()
+    {
+        $users = User::where('isAdmin', 0)->get();
+
+        return $users;
+    }
+
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function showDropdownUsers()
     {
         $users = User::select('name')->where('isAdmin', 0)->get();
 
-        return $users;
+        $usersNameArray = array('-- Please select a user --');
+
+        foreach($users as $user){
+            array_push($usersNameArray, $user->name);
+        }
+
+        return $usersNameArray;
     }
 
     /**
@@ -28,6 +42,15 @@ class AdminController extends Controller
     public function getAllBookings()
     {
         $bookings = Bookings::all();
+
+        return $bookings;
+    }
+
+    public function showUserBookings($user_id){
+        $bookings = Bookings::where('user_id', $user_id)
+                            ->orderBy('date')
+                            ->orderBy('time')
+                            ->get();
 
         return $bookings;
     }
