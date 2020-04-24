@@ -24,7 +24,7 @@ Route::get('/admin/users', 'AdminController@index')->name('admin.users');
 Route::get('/admin/clients', 'AdminController@showDropdownUsers')->name('admin.dropdwnClients');
 Route::get('/admin/clients/bookings/{user_id}', 'AdminController@showUserBookings')->name('admin.dropdwnClients');
 Route::post('/bookings', 'BookingsController@createNewBooking')->name('bookings.create');
-Route::get('/todaysbookings', 'BookingsController@getTodaysBookings');
+Route::get('/admin/todaysbookings', 'BookingsController@getTodaysBookings');
 Route::get('/bookings', 'BookingsController@getAllBookings');
 
 // user endpoints
