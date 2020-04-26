@@ -22,6 +22,13 @@ class ClassesController extends Controller
         return $todaysClasses;
     }
 
+    public function updateGoingAmountForClass($id){
+
+        Classes::where('id', $id)->increment('going');
+
+        return 'Done';
+    }
+
     /**
      * Show the form for creating a new resource.
      *

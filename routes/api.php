@@ -31,6 +31,7 @@ Route::post('/admin/update/{booking_id}', 'BookingsController@updateBooking');
 Route::get('/bookings', 'BookingsController@getAllBookings');
 Route::get('/admin/classes', 'ClassesController@index');
 Route::get('/admin/classes/today', 'ClassesController@getTodaysClasses');
+Route::put('/admin/classes/book/{id}', 'ClassesController@updateGoingAmountForClass');
 
 // user endpoints
 Route::get('/user/{user_id}', 'GeneralController@getMyBookings');
