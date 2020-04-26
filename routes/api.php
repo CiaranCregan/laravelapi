@@ -18,6 +18,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 // general
 Route::post('/login', 'AuthController@login')->name('login');
+Route::post('/register', 'AuthController@register')->name('register');
 
 // admin endpoints
 Route::get('/admin/users', 'AdminController@index')->name('admin.users');
@@ -25,7 +26,11 @@ Route::get('/admin/clients', 'AdminController@showDropdownUsers')->name('admin.d
 Route::get('/admin/clients/bookings/{user_id}', 'AdminController@showUserBookings')->name('admin.dropdwnClients');
 Route::post('/bookings', 'BookingsController@createNewBooking')->name('bookings.create');
 Route::get('/admin/todaysbookings', 'BookingsController@getTodaysBookings');
+Route::delete('/admin/remove/{bookingId}', 'BookingsController@destroy');
+Route::post('/admin/update/{booking_id}', 'BookingsController@updateBooking');
 Route::get('/bookings', 'BookingsController@getAllBookings');
+Route::get('/admin/classes', 'ClassesController@index');
+Route::get('/admin/classes/today', 'ClassesController@getTodaysClasses');
 
 // user endpoints
 Route::get('/user/{user_id}', 'GeneralController@getMyBookings');
