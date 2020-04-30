@@ -31,12 +31,12 @@ Route::post('/admin/update/{booking_id}', 'BookingsController@updateBooking');
 Route::get('/bookings', 'BookingsController@getAllBookings');
 Route::get('/admin/classes', 'ClassesController@index');
 Route::get('/admin/classes/today', 'ClassesController@getTodaysClasses');
-Route::put('/admin/classes/book/{id}', 'ClassesController@updateGoingAmountForClass');
+
 
 // user endpoints
-Route::get('/user/{user_id}', 'GeneralController@getMyBookings');
+Route::get('/user/all/{user_id}', 'GeneralController@getMyBookings');
 Route::get('/user/today/{user_id}', 'GeneralController@getTodaysBookings');
-Route::get('/user/attendclass/{user_id}', 'GeneralController@attendClass');
+Route::get('/user/future/{user_id}', 'GeneralController@getFutureBookings');
 Route::get('/qr-code/{id}', function ($id) {
     $image = QrCode::format('png')
     ->size(500)
@@ -44,3 +44,7 @@ Route::get('/qr-code/{id}', function ($id) {
 
     return response($image)->header('Content-type','image/png');
 });
+Route::put('/admin/classes/book/{classId}/{userId}', 'ClassesController@updateGoingAmountForClass');
+Route::put('/admin/classes/removebooking/{classId}/{userId}', 'ClassesController@removeBooking');
+Route::get('/admin/classes/going/{id}', 'ClassesController@getGoingForSpecificClass');
+Route::get('/admin/classes/confirm/{id}', 'ClassesController@showMyClasses');

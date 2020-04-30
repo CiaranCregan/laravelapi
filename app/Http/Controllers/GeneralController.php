@@ -8,7 +8,9 @@ use Illuminate\Http\Request;
 class GeneralController extends Controller
 {
     public function getMyBookings($user_id){
+        $todaysDate = date('Y-m-d');
         $userBookings = Bookings::where('user_id', $user_id)
+                        ->where('date', '<', $todaysDate)
                         ->orderBy('date')
                         ->orderBy('time')
                         ->get();
@@ -20,6 +22,19 @@ class GeneralController extends Controller
         $todaysDate = date('Y-m-d');
         $userBookings = Bookings::where('user_id', $user_id)
                         ->where('date', '=', $todaysDate)
+                        ->orderBy('date')
+                        ->orderBy('time')
+                        ->get();
+
+        return $userBookings;
+    }
+
+    public function getFutureBookings($user_id){
+        $todaysDate = date('Y-m-d');
+        $userBookings = Bookings::where('user_id', $user_id)
+                        ->where('date', '>', $todaysDate)
+                        ->orderBy('date')
+                        ->orderBy('time')
                         ->get();
 
         return $userBookings;
