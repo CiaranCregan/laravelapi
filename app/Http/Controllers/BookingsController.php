@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Bookings;
 use App\User;
 use App\Mail\BookingConfirmation;
+use App\Mail\BookingDeleted;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Mail;
@@ -113,6 +114,16 @@ class BookingsController extends Controller
         $booking = Bookings::findOrFail($bookingId);
 
         if ($booking){
+            $userDetailsById = User::where('id', $booking->user_id) -> first();
+
+            // $emailData = array(
+            //         'username' => $userDetailsById->name,
+            //         'date' => $booking->date,
+            //         'time' => $booking->time,
+            //         'type' => $booking->booking_type
+            //     );
+    
+            // Mail::to($userDetailsById->email)->send(new BookingDeleted($emailData));
             $booking->delete(); 
         } else {
             return response()->json(error);

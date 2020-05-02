@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Bookings;
+use App\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class GeneralController extends Controller
 {
@@ -38,6 +40,12 @@ class GeneralController extends Controller
                         ->get();
 
         return $userBookings;
+    }
+
+    public function updateUserInformation(Request $request, $id){
+        $user = User::findOrFail($id);
+
+        return $user;
     }
 
     public function attendClass($user_id){

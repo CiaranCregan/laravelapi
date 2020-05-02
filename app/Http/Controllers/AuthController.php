@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Client;
+use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
 {
@@ -48,5 +49,13 @@ class AuthController extends Controller
 
             return response()->json(null, 201);
         }
+    }
+
+    public function loggout() {
+        Auth()->user()->tokens->each(function ($token, $key){
+            $token->delete();
+        });
+
+        return response()->json('Successfully logged out', 200);
     }
 }

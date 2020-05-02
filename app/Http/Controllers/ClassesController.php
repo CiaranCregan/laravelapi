@@ -12,9 +12,50 @@ class ClassesController extends Controller
 {
     public function index()
     {
-        $classes = Classes::all();
+        $todaysDate = date('Y-m-d');
+        $classes = Classes::where('date', '>=', $todaysDate)->get();
 
         return $classes;
+    }
+
+    public function createClass(Request $request){
+        $class = new Classes;
+
+        $duplicateClass = Classes::where('date', '=', $request->date)
+                                    ->where('time', '=', $request->time)
+                                    ->get();
+
+        if ($duplicateClass->count()){
+            return response()->json('There is already a class for the following time and date', 405);
+        } else {
+            $class->title = $request->title;
+            $class->date = $request->date;
+            $class->time = $request->time;
+            $class->class_length = $request->class_length;
+            $class->going = $request->going;
+
+            $class->save();
+
+            return response()->json($class, 201);
+        }
+    }
+
+    public function deleteClass($classId)
+    {
+        $class = Classes::findOrFail($classId);
+
+        if ($class){
+            $doesClassHaveConfirms = Confirm::where('class_id', $classId)->get();
+
+            foreach($doesClassHaveConfirms as $remove){
+                DB::table('confirms')
+                    ->where('class_id', $remove->class_id)->delete();
+            }
+            $class->delete(); 
+        } else {
+            return response()->json(error);
+        }
+        return $response()->json(null, 202);
     }
 
     public function getTodaysClasses(){
@@ -58,88 +99,46 @@ class ClassesController extends Controller
 
     public function getGoingForSpecificClass($id){
 
-        $confirms = DB::table('classes')->join('confirms', 'confirms.class_id', 'classes.id')->select('confirms.*')->where('confirms.class_id', $id)->get();
+        $confirms = DB::table('classes')
+                    ->join('confirms', 'confirms.class_id', 'classes.id')
+                    ->select('confirms.*')
+                    ->where('confirms.class_id', $id)->get();
 
         return $confirms;
     }
 
-    public function showMyClasses($id){
+    public function getGoingForClass($id){
 
-        $todaysDate = date('Y-m-d');
+        $confirms = DB::table('classes')
+                    ->join('confirms', 'confirms.class_id', 'classes.id')
+                    ->select('confirms.*')
+                    ->where('confirms.class_id', $id)->get();
 
-        $classIds = Confirm::where('user_id', $id)->get();
+        $usersArray = array();
+        foreach($confirms as $confirm){
+            $usersArray[] = DB::table('users')
+                    ->where('id', $confirm->user_id)->get();
+        }
 
-        foreach($classIds as $id){
-            $all[] = Classes::where('id', $id->class_id)->where('date', '>=', $todaysDate)->get()->toArray();
-            // $classes = Classes::where('id', $id->class_id)->get();
-        };
-
-        return $all;
+        return $usersArray;
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
+    public function showMyClasses($user_id){
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
+        $confirms = Confirm::where('user_id', $user_id)->get();
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Classes  $classes
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Classes $classes)
-    {
-        //
-    }
+        $classesArray = array();
+        foreach($confirms as $confirm){
+            $classesArray[] = DB::table('classes')
+                    ->where('id', $confirm->class_id)->get();
+        }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Classes  $classes
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Classes $classes)
-    {
-        //
-    }
+        // $usersArray = array();
+        // foreach($confirms as $confirm){
+        //     $usersArray[] = DB::table('users')
+        //             ->where('id', $confirm->user_id)->get();
+        // }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Classes  $classes
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Classes $classes)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Classes  $classes
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Classes $classes)
-    {
-        //
+        return $classesArray;
     }
 }
