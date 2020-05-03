@@ -32,6 +32,7 @@ Route::post('/admin/update/{booking_id}', 'BookingsController@updateBooking');
 Route::get('/bookings', 'BookingsController@getAllBookings');
 Route::get('/admin/classes', 'ClassesController@index');
 Route::post('/admin/classes/create', 'ClassesController@createClass');
+Route::post('/admin/classes/update/{class_id}', 'ClassesController@updateClass');
 Route::delete('/admin/classes/remove/{classId}', 'ClassesController@deleteClass');
 Route::get('/admin/classes/today', 'ClassesController@getTodaysClasses');
 Route::get('/admin/classes/going/{id}', 'ClassesController@getGoingForClass');

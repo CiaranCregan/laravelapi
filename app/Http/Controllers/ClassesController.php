@@ -47,15 +47,17 @@ class ClassesController extends Controller
         if ($class){
             $doesClassHaveConfirms = Confirm::where('class_id', $classId)->get();
 
-            foreach($doesClassHaveConfirms as $remove){
-                DB::table('confirms')
-                    ->where('class_id', $remove->class_id)->delete();
+            if ($doesClassHaveConfirms->count()){
+                foreach($doesClassHaveConfirms as $remove){
+                    DB::table('confirms')
+                        ->where('class_id', $remove->class_id)->delete();
+                }   
             }
             $class->delete(); 
         } else {
             return response()->json(error);
         }
-        return $response()->json(null, 202);
+        return response()->json(null, 202);
     }
 
     public function getTodaysClasses(){
@@ -140,5 +142,19 @@ class ClassesController extends Controller
         // }
 
         return $classesArray;
+    }
+
+    public function updateClass (Request $request, $class_id){
+        $class = Classes::findOrFail($class_id);
+
+        $class->title = $request->title;
+        $class->date = $request->date;
+        $class->time = $request->time;
+        $class->class_length = $request->class_length;
+        $class->going = $request->going;
+
+        $class->save();
+
+        return response()->json($class, 201);
     }
 }
